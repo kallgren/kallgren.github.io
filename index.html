@@ -188,12 +188,20 @@
                         profileOpacity,
                     );
 
-                    // Overall blueprint opacity for borders/tags (use max of all)
+                    // Cursor spotlight (amplifier) - only visible within element masks
                     const maxOpacity = Math.max(
                         nameOpacity,
                         taglineOpacity,
                         profileOpacity,
                     );
+                    gridOverlay.style.setProperty("--cursor-x", mouseX + "px");
+                    gridOverlay.style.setProperty("--cursor-y", mouseY + "px");
+                    gridOverlay.style.setProperty(
+                        "--cursor-opacity",
+                        maxOpacity,
+                    );
+
+                    // Overall blueprint opacity for borders/tags
                     document.body.style.setProperty(
                         "--blueprint-opacity",
                         maxOpacity,
