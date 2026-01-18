@@ -90,57 +90,54 @@
                 });
             }
 
+            // Blueprint elements
+            const nameEl = document.querySelector(".name");
+            const taglineEl = document.querySelector(".tagline");
+            const profileEl = document.querySelector(".profile-image");
+
+            function getElementCenter(el) {
+                const rect = el.getBoundingClientRect();
+                return {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2,
+                };
+            }
+
+            function updateElementPositions() {
+                if (!BLUEPRINT_ENABLED) return;
+
+                const nameCenter = getElementCenter(nameEl);
+                const taglineCenter = getElementCenter(taglineEl);
+                const profileCenter = getElementCenter(profileEl);
+
+                gridOverlay.style.setProperty("--name-x", nameCenter.x + "px");
+                gridOverlay.style.setProperty("--name-y", nameCenter.y + "px");
+                gridOverlay.style.setProperty(
+                    "--tagline-x",
+                    taglineCenter.x + "px",
+                );
+                gridOverlay.style.setProperty(
+                    "--tagline-y",
+                    taglineCenter.y + "px",
+                );
+                gridOverlay.style.setProperty(
+                    "--profile-x",
+                    profileCenter.x + "px",
+                );
+                gridOverlay.style.setProperty(
+                    "--profile-y",
+                    profileCenter.y + "px",
+                );
+            }
+
+            // Update positions on load and resize
+            updateElementPositions();
+            window.addEventListener("resize", updateElementPositions);
+
             // Blueprint effect (per-element spotlight reveal)
             if (BLUEPRINT_ENABLED) {
-                const nameEl = document.querySelector(".name");
-                const taglineEl = document.querySelector(".tagline");
-                const profileEl = document.querySelector(".profile-image");
-
                 // Max distance at which opacity starts to increase (in pixels)
                 const maxDistance = 400;
-
-                function getElementCenter(el) {
-                    const rect = el.getBoundingClientRect();
-                    return {
-                        x: rect.left + rect.width / 2,
-                        y: rect.top + rect.height / 2,
-                    };
-                }
-
-                function updateElementPositions() {
-                    const nameCenter = getElementCenter(nameEl);
-                    const taglineCenter = getElementCenter(taglineEl);
-                    const profileCenter = getElementCenter(profileEl);
-
-                    gridOverlay.style.setProperty(
-                        "--name-x",
-                        nameCenter.x + "px",
-                    );
-                    gridOverlay.style.setProperty(
-                        "--name-y",
-                        nameCenter.y + "px",
-                    );
-                    gridOverlay.style.setProperty(
-                        "--tagline-x",
-                        taglineCenter.x + "px",
-                    );
-                    gridOverlay.style.setProperty(
-                        "--tagline-y",
-                        taglineCenter.y + "px",
-                    );
-                    gridOverlay.style.setProperty(
-                        "--profile-x",
-                        profileCenter.x + "px",
-                    );
-                    gridOverlay.style.setProperty(
-                        "--profile-y",
-                        profileCenter.y + "px",
-                    );
-                }
-
-                // Update positions on load and resize
-                updateElementPositions();
-                window.addEventListener("resize", updateElementPositions);
 
                 document.addEventListener("mousemove", (e) => {
                     const mouseX = e.clientX;
@@ -208,6 +205,60 @@
                     );
                 });
             }
+
+            // Draggable elements
+            const draggableElements = [
+                document.querySelector(".profile-image"),
+                document.querySelector(".name"),
+                document.querySelector(".tagline"),
+            ];
+
+            let draggedElement = null;
+            let dragOffsetX = 0;
+            let dragOffsetY = 0;
+
+            draggableElements.forEach((el) => {
+                el.style.cursor = "grab";
+
+                el.addEventListener("mousedown", (e) => {
+                    e.preventDefault();
+                    draggedElement = el;
+                    draggedElement.style.cursor = "grabbing";
+
+                    const rect = el.getBoundingClientRect();
+
+                    // If not already positioned as fixed, set it up
+                    if (el.style.position !== "fixed") {
+                        el.style.position = "fixed";
+                        el.style.left = rect.left + "px";
+                        el.style.top = rect.top + "px";
+                        el.style.margin = "0";
+                        el.style.zIndex = "100";
+                    }
+
+                    dragOffsetX = e.clientX - rect.left;
+                    dragOffsetY = e.clientY - rect.top;
+                });
+            });
+
+            document.addEventListener("mousemove", (e) => {
+                if (draggedElement) {
+                    const newLeft = e.clientX - dragOffsetX;
+                    const newTop = e.clientY - dragOffsetY;
+                    draggedElement.style.left = newLeft + "px";
+                    draggedElement.style.top = newTop + "px";
+
+                    // Update mask positions while dragging
+                    updateElementPositions();
+                }
+            });
+
+            document.addEventListener("mouseup", () => {
+                if (draggedElement) {
+                    draggedElement.style.cursor = "grab";
+                    draggedElement = null;
+                }
+            });
 
             // Particle effect
             const canvas = document.getElementById("particles");
