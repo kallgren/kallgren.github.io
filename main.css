@@ -20,21 +20,55 @@
     background-size: 20px 20px;
     pointer-events: none;
     z-index: -1;
-    --radius: 0px;
-    --opacity: 0;
-    opacity: var(--opacity);
-    mask-image: radial-gradient(
-        circle var(--radius) at 100% 100%,
-        black 0%,
-        black 70%,
-        transparent 100%
-    );
-    -webkit-mask-image: radial-gradient(
-        circle var(--radius) at 100% 100%,
-        black 0%,
-        black 70%,
-        transparent 100%
-    );
+    --name-x: 0px;
+    --name-y: 0px;
+    --name-opacity: 0;
+    --tagline-x: 0px;
+    --tagline-y: 0px;
+    --tagline-opacity: 0;
+    --profile-x: 0px;
+    --profile-y: 0px;
+    --profile-opacity: 0;
+    mask-image:
+        radial-gradient(
+            circle 400px at var(--name-x) var(--name-y),
+            rgba(0, 0, 0, var(--name-opacity)) 0%,
+            rgba(0, 0, 0, var(--name-opacity)) 30%,
+            transparent 100%
+        ),
+        radial-gradient(
+            circle 300px at var(--tagline-x) var(--tagline-y),
+            rgba(0, 0, 0, var(--tagline-opacity)) 0%,
+            rgba(0, 0, 0, var(--tagline-opacity)) 30%,
+            transparent 100%
+        ),
+        radial-gradient(
+            circle 250px at var(--profile-x) var(--profile-y),
+            rgba(0, 0, 0, var(--profile-opacity)) 0%,
+            rgba(0, 0, 0, var(--profile-opacity)) 30%,
+            transparent 100%
+        );
+    -webkit-mask-image:
+        radial-gradient(
+            circle 400px at var(--name-x) var(--name-y),
+            rgba(0, 0, 0, var(--name-opacity)) 0%,
+            rgba(0, 0, 0, var(--name-opacity)) 30%,
+            transparent 100%
+        ),
+        radial-gradient(
+            circle 300px at var(--tagline-x) var(--tagline-y),
+            rgba(0, 0, 0, var(--tagline-opacity)) 0%,
+            rgba(0, 0, 0, var(--tagline-opacity)) 30%,
+            transparent 100%
+        ),
+        radial-gradient(
+            circle 250px at var(--profile-x) var(--profile-y),
+            rgba(0, 0, 0, var(--profile-opacity)) 0%,
+            rgba(0, 0, 0, var(--profile-opacity)) 30%,
+            transparent 100%
+        );
+    mask-composite: add;
+    -webkit-mask-composite: source-over;
 }
 
 body {

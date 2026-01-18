@@ -90,35 +90,113 @@
                 });
             }
 
-            // Blueprint effect (cursor-position-based reveal)
+            // Blueprint effect (per-element spotlight reveal)
             if (BLUEPRINT_ENABLED) {
-                document.addEventListener("mousemove", (e) => {
-                    const xRatio = e.clientX / window.innerWidth;
-                    const yRatio = e.clientY / window.innerHeight;
+                const nameEl = document.querySelector(".name");
+                const taglineEl = document.querySelector(".tagline");
+                const profileEl = document.querySelector(".profile-image");
 
-                    // Distance past the diagonal (x + y = 1)
-                    const pastDiagonal = xRatio + yRatio - 1;
-                    // Normalize: 0 at diagonal, 1 at bottom-right corner
-                    const intensity = Math.max(0, pastDiagonal);
+                // Max distance at which opacity starts to increase (in pixels)
+                const maxDistance = 400;
 
-                    // Radius: start at 60% of diagonal, grow to 100% at full intensity
-                    const maxRadius = Math.sqrt(
-                        window.innerWidth ** 2 + window.innerHeight ** 2,
+                function getElementCenter(el) {
+                    const rect = el.getBoundingClientRect();
+                    return {
+                        x: rect.left + rect.width / 2,
+                        y: rect.top + rect.height / 2,
+                    };
+                }
+
+                function updateElementPositions() {
+                    const nameCenter = getElementCenter(nameEl);
+                    const taglineCenter = getElementCenter(taglineEl);
+                    const profileCenter = getElementCenter(profileEl);
+
+                    gridOverlay.style.setProperty(
+                        "--name-x",
+                        nameCenter.x + "px",
                     );
-                    const radius = (0.6 + intensity * 0.4) * maxRadius;
+                    gridOverlay.style.setProperty(
+                        "--name-y",
+                        nameCenter.y + "px",
+                    );
+                    gridOverlay.style.setProperty(
+                        "--tagline-x",
+                        taglineCenter.x + "px",
+                    );
+                    gridOverlay.style.setProperty(
+                        "--tagline-y",
+                        taglineCenter.y + "px",
+                    );
+                    gridOverlay.style.setProperty(
+                        "--profile-x",
+                        profileCenter.x + "px",
+                    );
+                    gridOverlay.style.setProperty(
+                        "--profile-y",
+                        profileCenter.y + "px",
+                    );
+                }
 
-                    // Opacity reaches 1 faster (at ~50% intensity)
-                    const opacity = Math.min(1, intensity * 2);
+                // Update positions on load and resize
+                updateElementPositions();
+                window.addEventListener("resize", updateElementPositions);
 
-                    gridOverlay.style.setProperty("--radius", radius + "px");
-                    gridOverlay.style.setProperty("--opacity", opacity);
+                document.addEventListener("mousemove", (e) => {
+                    const mouseX = e.clientX;
+                    const mouseY = e.clientY;
+
+                    const nameCenter = getElementCenter(nameEl);
+                    const taglineCenter = getElementCenter(taglineEl);
+                    const profileCenter = getElementCenter(profileEl);
+
+                    // Calculate distances
+                    const nameDist = Math.sqrt(
+                        (mouseX - nameCenter.x) ** 2 +
+                            (mouseY - nameCenter.y) ** 2,
+                    );
+                    const taglineDist = Math.sqrt(
+                        (mouseX - taglineCenter.x) ** 2 +
+                            (mouseY - taglineCenter.y) ** 2,
+                    );
+                    const profileDist = Math.sqrt(
+                        (mouseX - profileCenter.x) ** 2 +
+                            (mouseY - profileCenter.y) ** 2,
+                    );
+
+                    // Convert distance to opacity (1 when close, 0 when far)
+                    const nameOpacity = Math.max(0, 1 - nameDist / maxDistance);
+                    const taglineOpacity = Math.max(
+                        0,
+                        1 - taglineDist / maxDistance,
+                    );
+                    const profileOpacity = Math.max(
+                        0,
+                        1 - profileDist / maxDistance,
+                    );
+
+                    gridOverlay.style.setProperty(
+                        "--name-opacity",
+                        nameOpacity,
+                    );
+                    gridOverlay.style.setProperty(
+                        "--tagline-opacity",
+                        taglineOpacity,
+                    );
+                    gridOverlay.style.setProperty(
+                        "--profile-opacity",
+                        profileOpacity,
+                    );
+
+                    // Overall blueprint opacity for borders/tags (use max of all)
+                    const maxOpacity = Math.max(
+                        nameOpacity,
+                        taglineOpacity,
+                        profileOpacity,
+                    );
                     document.body.style.setProperty(
                         "--blueprint-opacity",
-                        opacity,
-                    );
-                    document.body.style.setProperty(
-                        "--blueprint-intensity",
-                        intensity,
+                        maxOpacity,
                     );
                 });
             }
