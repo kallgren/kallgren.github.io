@@ -13,6 +13,7 @@
         />
     </head>
     <body>
+        <div class="grid-overlay" id="gridOverlay"></div>
         <canvas id="particles"></canvas>
         <main class="container">
             <img
@@ -21,10 +22,14 @@
                 class="profile-image"
             />
             <div class="intro">
-                <h1 class="name">Robert Källgren</h1>
+                <h1 class="name">
+                    Robert Källgren
+                    <span class="spec">5rem / 500</span>
+                </h1>
                 <p class="tagline">
                     <span class="role" id="role">Frontend Developer</span>
                     based in Uppsala, Sweden
+                    <span class="spec">1.5rem / 300</span>
                 </p>
             </div>
             <nav class="social-links">
@@ -57,6 +62,67 @@
             </nav>
         </main>
         <script>
+            // Feature toggles
+            const BLUEPRINT_ENABLED = true;
+            const FRONTEND_DEVELOPER_HOVER_ENABLED = true;
+
+            const intro = document.querySelector(".intro");
+            const role = document.getElementById("role");
+            const normal = "Frontend Developer";
+            const code = "<FrontendDeveloper />";
+            const gridOverlay = document.getElementById("gridOverlay");
+
+            // Hide grid overlay if blueprint is disabled
+            if (!BLUEPRINT_ENABLED) {
+                gridOverlay.style.display = "none";
+            }
+
+            // FrontendDeveloper hover effect (disabled by default)
+            if (FRONTEND_DEVELOPER_HOVER_ENABLED) {
+                intro.addEventListener("mouseenter", () => {
+                    role.textContent = code;
+                    role.classList.add("code");
+                });
+
+                intro.addEventListener("mouseleave", () => {
+                    role.textContent = normal;
+                    role.classList.remove("code");
+                });
+            }
+
+            // Blueprint effect (cursor-position-based reveal)
+            if (BLUEPRINT_ENABLED) {
+                document.addEventListener("mousemove", (e) => {
+                    const xRatio = e.clientX / window.innerWidth;
+                    const yRatio = e.clientY / window.innerHeight;
+
+                    // Distance past the diagonal (x + y = 1)
+                    const pastDiagonal = xRatio + yRatio - 1;
+                    // Normalize: 0 at diagonal, 1 at bottom-right corner
+                    const intensity = Math.max(0, pastDiagonal);
+
+                    // Radius: start at 60% of diagonal, grow to 100% at full intensity
+                    const maxRadius = Math.sqrt(
+                        window.innerWidth ** 2 + window.innerHeight ** 2,
+                    );
+                    const radius = (0.6 + intensity * 0.4) * maxRadius;
+
+                    // Opacity reaches 1 faster (at ~50% intensity)
+                    const opacity = Math.min(1, intensity * 2);
+
+                    gridOverlay.style.setProperty("--radius", radius + "px");
+                    gridOverlay.style.setProperty("--opacity", opacity);
+                    document.body.style.setProperty(
+                        "--blueprint-opacity",
+                        opacity,
+                    );
+                    document.body.style.setProperty(
+                        "--blueprint-intensity",
+                        intensity,
+                    );
+                });
+            }
+
             // Particle effect
             const canvas = document.getElementById("particles");
             const ctx = canvas.getContext("2d");
