@@ -106,27 +106,50 @@
             function updateElementPositions() {
                 if (!BLUEPRINT_ENABLED) return;
 
-                const nameCenter = getElementCenter(nameEl);
-                const taglineCenter = getElementCenter(taglineEl);
-                const profileCenter = getElementCenter(profileEl);
+                const nameRect = nameEl.getBoundingClientRect();
+                const taglineRect = taglineEl.getBoundingClientRect();
+                const profileRect = profileEl.getBoundingClientRect();
 
-                gridOverlay.style.setProperty("--name-x", nameCenter.x + "px");
-                gridOverlay.style.setProperty("--name-y", nameCenter.y + "px");
+                // Name position and size (circle based on width)
+                gridOverlay.style.setProperty(
+                    "--name-x",
+                    nameRect.left + nameRect.width / 2 + "px",
+                );
+                gridOverlay.style.setProperty(
+                    "--name-y",
+                    nameRect.top + nameRect.height / 2 + "px",
+                );
+                gridOverlay.style.setProperty(
+                    "--name-size",
+                    nameRect.width * 0.8 + "px",
+                );
+
+                // Tagline position and size (circle based on width)
                 gridOverlay.style.setProperty(
                     "--tagline-x",
-                    taglineCenter.x + "px",
+                    taglineRect.left + taglineRect.width / 2 + "px",
                 );
                 gridOverlay.style.setProperty(
                     "--tagline-y",
-                    taglineCenter.y + "px",
+                    taglineRect.top + taglineRect.height / 2 + "px",
                 );
                 gridOverlay.style.setProperty(
+                    "--tagline-size",
+                    taglineRect.width * 0.7 + "px",
+                );
+
+                // Profile position and size (circle)
+                gridOverlay.style.setProperty(
                     "--profile-x",
-                    profileCenter.x + "px",
+                    profileRect.left + profileRect.width / 2 + "px",
                 );
                 gridOverlay.style.setProperty(
                     "--profile-y",
-                    profileCenter.y + "px",
+                    profileRect.top + profileRect.height / 2 + "px",
+                );
+                gridOverlay.style.setProperty(
+                    "--profile-size",
+                    profileRect.width * 1.2 + "px",
                 );
             }
 
@@ -136,32 +159,61 @@
 
             // Blueprint effect (per-element spotlight reveal)
             if (BLUEPRINT_ENABLED) {
-                // Max distance at which opacity starts to increase (in pixels)
-                const maxDistance = 400;
+                // Max distance outside element at which opacity reaches 0
+                const maxDistance = 300;
+                // Padding inside element edge where opacity stays at 1
+                const padding = 50;
+
+                // Calculate distance from mouse to element edge (0 if inside)
+                function getEdgeDistance(mouseX, mouseY, rect) {
+                    const dx = Math.max(
+                        0,
+                        Math.abs(mouseX - (rect.left + rect.width / 2)) -
+                            rect.width / 2 -
+                            padding,
+                    );
+                    const dy = Math.max(
+                        0,
+                        Math.abs(mouseY - (rect.top + rect.height / 2)) -
+                            rect.height / 2 -
+                            padding,
+                    );
+                    return Math.sqrt(dx * dx + dy * dy);
+                }
+
+                // For circle elements (profile), use distance to center minus radius
+                function getCircleEdgeDistance(mouseX, mouseY, rect) {
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const radius = rect.width / 2 + padding;
+                    const dist = Math.sqrt(
+                        (mouseX - centerX) ** 2 + (mouseY - centerY) ** 2,
+                    );
+                    return Math.max(0, dist - radius);
+                }
 
                 document.addEventListener("mousemove", (e) => {
                     const mouseX = e.clientX;
                     const mouseY = e.clientY;
 
-                    const nameCenter = getElementCenter(nameEl);
-                    const taglineCenter = getElementCenter(taglineEl);
-                    const profileCenter = getElementCenter(profileEl);
+                    const nameRect = nameEl.getBoundingClientRect();
+                    const taglineRect = taglineEl.getBoundingClientRect();
+                    const profileRect = profileEl.getBoundingClientRect();
 
-                    // Calculate distances
-                    const nameDist = Math.sqrt(
-                        (mouseX - nameCenter.x) ** 2 +
-                            (mouseY - nameCenter.y) ** 2,
+                    // Calculate distances to element edges
+                    const nameDist = getEdgeDistance(mouseX, mouseY, nameRect);
+                    const taglineDist = getEdgeDistance(
+                        mouseX,
+                        mouseY,
+                        taglineRect,
                     );
-                    const taglineDist = Math.sqrt(
-                        (mouseX - taglineCenter.x) ** 2 +
-                            (mouseY - taglineCenter.y) ** 2,
-                    );
-                    const profileDist = Math.sqrt(
-                        (mouseX - profileCenter.x) ** 2 +
-                            (mouseY - profileCenter.y) ** 2,
+                    const profileDist = getCircleEdgeDistance(
+                        mouseX,
+                        mouseY,
+                        profileRect,
                     );
 
-                    // Convert distance to opacity (1 when close, 0 when far)
+                    // Convert distance to opacity (1 when inside/close, 0 when far)
                     const nameOpacity = Math.max(0, 1 - nameDist / maxDistance);
                     const taglineOpacity = Math.max(
                         0,

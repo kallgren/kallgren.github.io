@@ -22,64 +22,67 @@
     z-index: -1;
     --name-x: 0px;
     --name-y: 0px;
+    --name-size: 400px;
     --name-opacity: 0;
     --tagline-x: 0px;
     --tagline-y: 0px;
+    --tagline-size: 300px;
     --tagline-opacity: 0;
     --profile-x: 0px;
     --profile-y: 0px;
+    --profile-size: 250px;
     --profile-opacity: 0;
     --cursor-x: 0px;
     --cursor-y: 0px;
     --cursor-opacity: 0;
     mask-image:
         radial-gradient(
-            circle 150px at var(--cursor-x) var(--cursor-y),
+            circle 250px at var(--cursor-x) var(--cursor-y),
             rgba(0, 0, 0, var(--cursor-opacity)) 0%,
-            rgba(0, 0, 0, var(--cursor-opacity)) 40%,
+            rgba(0, 0, 0, calc(var(--cursor-opacity) * 0.5)) 40%,
             transparent 100%
         ),
         radial-gradient(
-            circle 400px at var(--name-x) var(--name-y),
+            circle var(--name-size) at var(--name-x) var(--name-y),
             rgba(0, 0, 0, var(--name-opacity)) 0%,
-            rgba(0, 0, 0, var(--name-opacity)) 30%,
+            rgba(0, 0, 0, calc(var(--name-opacity) * 0.5)) 30%,
             transparent 100%
         ),
         radial-gradient(
-            circle 300px at var(--tagline-x) var(--tagline-y),
+            circle var(--tagline-size) at var(--tagline-x) var(--tagline-y),
             rgba(0, 0, 0, var(--tagline-opacity)) 0%,
-            rgba(0, 0, 0, var(--tagline-opacity)) 30%,
+            rgba(0, 0, 0, calc(var(--tagline-opacity) * 0.5)) 30%,
             transparent 100%
         ),
         radial-gradient(
-            circle 250px at var(--profile-x) var(--profile-y),
+            circle var(--profile-size) at var(--profile-x) var(--profile-y),
             rgba(0, 0, 0, var(--profile-opacity)) 0%,
-            rgba(0, 0, 0, var(--profile-opacity)) 30%,
+            rgba(0, 0, 0, calc(var(--profile-opacity) * 0.5)) 30%,
             transparent 100%
         );
     -webkit-mask-image:
         radial-gradient(
-            circle 150px at var(--cursor-x) var(--cursor-y),
+            circle 250px at var(--cursor-x) var(--cursor-y),
             rgba(0, 0, 0, var(--cursor-opacity)) 0%,
-            rgba(0, 0, 0, var(--cursor-opacity)) 40%,
+            rgba(0, 0, 0, calc(var(--cursor-opacity) * 0.5)) 40%,
             transparent 100%
         ),
         radial-gradient(
-            circle 400px at var(--name-x) var(--name-y),
+            circle var(--name-size) at var(--name-x) var(--name-y),
             rgba(0, 0, 0, var(--name-opacity)) 0%,
-            rgba(0, 0, 0, var(--name-opacity)) 30%,
+            rgba(0, 0, 0, calc(var(--name-opacity) * 0.5)) 30%,
             transparent 100%
         ),
         radial-gradient(
-            circle 300px at var(--tagline-x) var(--tagline-y),
+            circle var(--tagline-size) at var(--tagline-x) var(--tagline-y),
             rgba(0, 0, 0, var(--tagline-opacity)) 0%,
-            rgba(0, 0, 0, var(--tagline-opacity)) 30%,
+            rgba(0, 0, 0, calc(var(--tagline-opacity) * 0.5)) 30%,
             transparent 100%
         ),
         radial-gradient(
-            circle 250px at var(--profile-x) var(--profile-y),
+            circle var(--profile-size) at var(--profile-x) var(--profile-y),
             rgba(0, 0, 0, var(--profile-opacity)) 0%,
-            rgba(0, 0, 0, var(--profile-opacity)) 30%,
+            rgba(0, 0, 0, calc(var(--profile-opacity) * 0.5)) 30%,
             transparent 100%
         );
     mask-composite: add;
