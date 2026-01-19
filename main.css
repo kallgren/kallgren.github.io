@@ -145,6 +145,7 @@ body {
 .profile-image,
 .name,
 .tagline {
+    --hover-scale: 1.1;
     transition: transform 0.3s ease;
     transform-origin: bottom right;
 }
@@ -152,7 +153,7 @@ body {
 .profile-image:hover,
 .name:hover,
 .tagline:hover {
-    transform: scale(1.1);
+    transform: scale(var(--hover-scale));
 }
 
 .intro {

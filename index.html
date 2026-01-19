@@ -64,7 +64,7 @@
         <script>
             // Feature toggles
             const BLUEPRINT_ENABLED = true;
-            const FRONTEND_DEVELOPER_HOVER_ENABLED = true;
+            const FRONTEND_DEVELOPER_HOVER_ENABLED = false;
 
             const intro = document.querySelector(".intro");
             const role = document.getElementById("role");
@@ -281,15 +281,28 @@
 
                     // If not already positioned as fixed, set it up
                     if (el.style.position !== "fixed") {
+                        // Account for the scale on hover (read from CSS variable)
+                        const scale =
+                            parseFloat(
+                                getComputedStyle(el).getPropertyValue(
+                                    "--hover-scale",
+                                ),
+                            ) || 1;
+                        const unscaledWidth = rect.width / scale;
+                        const unscaledHeight = rect.height / scale;
+                        // Since transform-origin is bottom-right, the expansion goes left and up
+                        const offsetX = rect.width - unscaledWidth;
+                        const offsetY = rect.height - unscaledHeight;
+
                         el.style.position = "fixed";
-                        el.style.left = rect.left + "px";
-                        el.style.top = rect.top + "px";
+                        el.style.left = rect.left + offsetX + "px";
+                        el.style.top = rect.top + offsetY + "px";
                         el.style.margin = "0";
                         el.style.zIndex = "100";
                     }
 
-                    dragOffsetX = e.clientX - rect.left;
-                    dragOffsetY = e.clientY - rect.top;
+                    dragOffsetX = e.clientX - parseFloat(el.style.left);
+                    dragOffsetY = e.clientY - parseFloat(el.style.top);
                 });
             });
 
@@ -327,14 +340,22 @@
             resizeCanvas();
             window.addEventListener("resize", resizeCanvas);
 
-            // Disable particles over social links
+            // Disable particles over social links and main elements
             const socialLinks = document.querySelector(".social-links");
+            const particleDisableElements = [
+                socialLinks,
+                nameEl,
+                taglineEl,
+                profileEl,
+            ];
 
-            socialLinks.addEventListener("mouseenter", () => {
-                particlesEnabled = false;
-            });
-            socialLinks.addEventListener("mouseleave", () => {
-                particlesEnabled = true;
+            particleDisableElements.forEach((el) => {
+                el.addEventListener("mouseenter", () => {
+                    particlesEnabled = false;
+                });
+                el.addEventListener("mouseleave", () => {
+                    particlesEnabled = true;
+                });
             });
 
             document.addEventListener("mousemove", (e) => {
