@@ -62,10 +62,16 @@
             </nav>
         </main>
         <script>
-            // Feature toggles
-            const BLUEPRINT_ENABLED = true;
-            const FRONTEND_DEVELOPER_HOVER_ENABLED = false;
-            const MOVABLE_ELEMENTS_ENABLED = true;
+            // Mobile detection
+            const isMobile =
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                    navigator.userAgent,
+                ) || window.innerWidth <= 768;
+
+            // Feature toggles (disabled on mobile)
+            const BLUEPRINT_ENABLED = !isMobile && true;
+            const FRONTEND_DEVELOPER_HOVER_ENABLED = !isMobile && false;
+            const MOVABLE_ELEMENTS_ENABLED = !isMobile && true;
 
             const intro = document.querySelector(".intro");
             const role = document.getElementById("role");
