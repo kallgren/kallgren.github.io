@@ -72,6 +72,7 @@
             const BLUEPRINT_ENABLED = !isMobile && true;
             const FRONTEND_DEVELOPER_HOVER_ENABLED = !isMobile && false;
             const MOVABLE_ELEMENTS_ENABLED = !isMobile && true;
+            const PARTICLES_ENABLED = !isMobile && true;
 
             const intro = document.querySelector(".intro");
             const role = document.getElementById("role");
@@ -339,79 +340,81 @@
             }
 
             // Particle effect
-            const canvas = document.getElementById("particles");
-            const ctx = canvas.getContext("2d");
-            let particles = [];
-            let mouseX = 0;
-            let mouseY = 0;
-            let particlesEnabled = true;
+            if (PARTICLES_ENABLED) {
+                const canvas = document.getElementById("particles");
+                const ctx = canvas.getContext("2d");
+                let particles = [];
+                let mouseX = 0;
+                let mouseY = 0;
+                let particlesEnabled = true;
 
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            resizeCanvas();
-            window.addEventListener("resize", resizeCanvas);
-
-            // Disable particles over social links and main elements (only if movable)
-            const socialLinks = document.querySelector(".social-links");
-            const particleDisableElements = MOVABLE_ELEMENTS_ENABLED
-                ? [socialLinks, nameEl, taglineEl, profileEl]
-                : [socialLinks];
-
-            particleDisableElements.forEach((el) => {
-                el.addEventListener("mouseenter", () => {
-                    particlesEnabled = false;
-                });
-                el.addEventListener("mouseleave", () => {
-                    particlesEnabled = true;
-                });
-            });
-
-            document.addEventListener("mousemove", (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-
-                if (!particlesEnabled) return;
-
-                // Spawn particles
-                for (let i = 0; i < 2; i++) {
-                    particles.push({
-                        x: mouseX,
-                        y: mouseY,
-                        vx: (Math.random() - 0.5) * 2,
-                        vy: (Math.random() - 0.5) * 2,
-                        life: 1,
-                        size: Math.random() * 3 + 1,
-                        color: Math.random() > 0.5 ? "#3b82f6" : "#e07850",
-                    });
+                function resizeCanvas() {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
                 }
-            });
+                resizeCanvas();
+                window.addEventListener("resize", resizeCanvas);
 
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Disable particles over social links and main elements (only if movable)
+                const socialLinks = document.querySelector(".social-links");
+                const particleDisableElements = MOVABLE_ELEMENTS_ENABLED
+                    ? [socialLinks, nameEl, taglineEl, profileEl]
+                    : [socialLinks];
 
-                particles = particles.filter((p) => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life -= 0.02;
-                    p.size *= 0.98;
-
-                    if (p.life > 0) {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                        ctx.fillStyle = p.color;
-                        ctx.globalAlpha = p.life * 0.6;
-                        ctx.fill();
-                        ctx.globalAlpha = 1;
-                        return true;
-                    }
-                    return false;
+                particleDisableElements.forEach((el) => {
+                    el.addEventListener("mouseenter", () => {
+                        particlesEnabled = false;
+                    });
+                    el.addEventListener("mouseleave", () => {
+                        particlesEnabled = true;
+                    });
                 });
 
-                requestAnimationFrame(animateParticles);
+                document.addEventListener("mousemove", (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+
+                    if (!particlesEnabled) return;
+
+                    // Spawn particles
+                    for (let i = 0; i < 2; i++) {
+                        particles.push({
+                            x: mouseX,
+                            y: mouseY,
+                            vx: (Math.random() - 0.5) * 2,
+                            vy: (Math.random() - 0.5) * 2,
+                            life: 1,
+                            size: Math.random() * 3 + 1,
+                            color: Math.random() > 0.5 ? "#3b82f6" : "#e07850",
+                        });
+                    }
+                });
+
+                function animateParticles() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    particles = particles.filter((p) => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.life -= 0.02;
+                        p.size *= 0.98;
+
+                        if (p.life > 0) {
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            ctx.fillStyle = p.color;
+                            ctx.globalAlpha = p.life * 0.6;
+                            ctx.fill();
+                            ctx.globalAlpha = 1;
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    requestAnimationFrame(animateParticles);
+                }
+                animateParticles();
             }
-            animateParticles();
         </script>
     </body>
 </html>
