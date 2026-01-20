@@ -65,6 +65,7 @@
             // Feature toggles
             const BLUEPRINT_ENABLED = true;
             const FRONTEND_DEVELOPER_HOVER_ENABLED = false;
+            const MOVABLE_ELEMENTS_ENABLED = true;
 
             const intro = document.querySelector(".intro");
             const role = document.getElementById("role");
@@ -259,71 +260,77 @@
             }
 
             // Draggable elements
-            const draggableElements = [
-                document.querySelector(".profile-image"),
-                document.querySelector(".name"),
-                document.querySelector(".tagline"),
-            ];
+            if (MOVABLE_ELEMENTS_ENABLED) {
+                document.body.classList.add("movable-elements");
+            }
 
-            let draggedElement = null;
-            let dragOffsetX = 0;
-            let dragOffsetY = 0;
+            if (MOVABLE_ELEMENTS_ENABLED) {
+                const draggableElements = [
+                    document.querySelector(".profile-image"),
+                    document.querySelector(".name"),
+                    document.querySelector(".tagline"),
+                ];
 
-            draggableElements.forEach((el) => {
-                el.style.cursor = "grab";
+                let draggedElement = null;
+                let dragOffsetX = 0;
+                let dragOffsetY = 0;
 
-                el.addEventListener("mousedown", (e) => {
-                    e.preventDefault();
-                    draggedElement = el;
-                    draggedElement.style.cursor = "grabbing";
+                draggableElements.forEach((el) => {
+                    el.style.cursor = "grab";
 
-                    const rect = el.getBoundingClientRect();
+                    el.addEventListener("mousedown", (e) => {
+                        e.preventDefault();
+                        draggedElement = el;
+                        draggedElement.style.cursor = "grabbing";
 
-                    // If not already positioned as fixed, set it up
-                    if (el.style.position !== "fixed") {
-                        // Account for the scale on hover (read from CSS variable)
-                        const scale =
-                            parseFloat(
-                                getComputedStyle(el).getPropertyValue(
-                                    "--hover-scale",
-                                ),
-                            ) || 1;
-                        const unscaledWidth = rect.width / scale;
-                        const unscaledHeight = rect.height / scale;
-                        // Since transform-origin is bottom-right, the expansion goes left and up
-                        const offsetX = rect.width - unscaledWidth;
-                        const offsetY = rect.height - unscaledHeight;
+                        const rect = el.getBoundingClientRect();
 
-                        el.style.position = "fixed";
-                        el.style.left = rect.left + offsetX + "px";
-                        el.style.top = rect.top + offsetY + "px";
-                        el.style.margin = "0";
-                        el.style.zIndex = "100";
-                    }
+                        // If not already positioned as fixed, set it up
+                        if (el.style.position !== "fixed") {
+                            // Account for the scale on hover (read from CSS variable)
+                            const scale =
+                                parseFloat(
+                                    getComputedStyle(el).getPropertyValue(
+                                        "--hover-scale",
+                                    ),
+                                ) || 1;
+                            const unscaledWidth = rect.width / scale;
+                            const unscaledHeight = rect.height / scale;
+                            // Since transform-origin is bottom-right, the expansion goes left and up
+                            const offsetX = rect.width - unscaledWidth;
+                            const offsetY = rect.height - unscaledHeight;
 
-                    dragOffsetX = e.clientX - parseFloat(el.style.left);
-                    dragOffsetY = e.clientY - parseFloat(el.style.top);
+                            el.style.position = "fixed";
+                            el.style.left = rect.left + offsetX + "px";
+                            el.style.top = rect.top + offsetY + "px";
+                            el.style.margin = "0";
+                            el.style.zIndex = "100";
+                        }
+
+                        dragOffsetX = e.clientX - parseFloat(el.style.left);
+                        dragOffsetY = e.clientY - parseFloat(el.style.top);
+                    });
                 });
-            });
 
-            document.addEventListener("mousemove", (e) => {
-                if (draggedElement) {
-                    const newLeft = e.clientX - dragOffsetX;
-                    const newTop = e.clientY - dragOffsetY;
-                    draggedElement.style.left = newLeft + "px";
-                    draggedElement.style.top = newTop + "px";
+                document.addEventListener("mousemove", (e) => {
+                    if (draggedElement) {
+                        const newLeft = e.clientX - dragOffsetX;
+                        const newTop = e.clientY - dragOffsetY;
+                        draggedElement.style.left = newLeft + "px";
+                        draggedElement.style.top = newTop + "px";
 
-                    // Update mask positions while dragging
-                    updateElementPositions();
-                }
-            });
+                        // Update mask positions while dragging
+                        updateElementPositions();
+                    }
+                });
 
-            document.addEventListener("mouseup", () => {
-                if (draggedElement) {
-                    draggedElement.style.cursor = "grab";
-                    draggedElement = null;
-                }
-            });
+                document.addEventListener("mouseup", () => {
+                    if (draggedElement) {
+                        draggedElement.style.cursor = "grab";
+                        draggedElement = null;
+                    }
+                });
+            }
 
             // Particle effect
             const canvas = document.getElementById("particles");
@@ -340,14 +347,11 @@
             resizeCanvas();
             window.addEventListener("resize", resizeCanvas);
 
-            // Disable particles over social links and main elements
+            // Disable particles over social links and main elements (only if movable)
             const socialLinks = document.querySelector(".social-links");
-            const particleDisableElements = [
-                socialLinks,
-                nameEl,
-                taglineEl,
-                profileEl,
-            ];
+            const particleDisableElements = MOVABLE_ELEMENTS_ENABLED
+                ? [socialLinks, nameEl, taglineEl, profileEl]
+                : [socialLinks];
 
             particleDisableElements.forEach((el) => {
                 el.addEventListener("mouseenter", () => {

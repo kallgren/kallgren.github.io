@@ -150,9 +150,9 @@ body {
     transform-origin: bottom right;
 }
 
-.profile-image:hover,
-.name:hover,
-.tagline:hover {
+body.movable-elements .profile-image:hover,
+body.movable-elements .name:hover,
+body.movable-elements .tagline:hover {
     transform: scale(var(--hover-scale));
 }
 
