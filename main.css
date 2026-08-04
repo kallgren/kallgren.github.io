@@ -275,8 +275,58 @@ h3 a:hover {
     text-decoration-thickness: 1px;
 }
 
+.ext {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-left: 0.24em;
+    vertical-align: 0.06em;
+    color: var(--muted);
+}
+
+h3 a:hover .ext {
+    color: var(--text);
+}
+
 .project p {
     margin: 0 0 16px;
+}
+
+/* ---------- source link ---------- */
+
+.source {
+    display: none;
+}
+
+.source {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.source:hover,
+.source:hover .ext {
+    color: var(--text);
+}
+
+.source:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+
+/* ---------- hover reveal ---------- */
+
+@media (hover: hover) {
+    .project h3 .ext {
+        opacity: 0;
+    }
+
+    .project:hover h3 .ext,
+    .project:focus-within h3 .ext {
+        opacity: 1;
+    }
 }
 
 h4 {
@@ -301,6 +351,7 @@ h4 {
 .tags {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
 }
 
