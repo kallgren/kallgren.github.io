@@ -1,12 +1,41 @@
 :root {
-    --bg: #0d0d0f;
-    --text: #e8e6e3;
-    --muted: #8a8783;
-    --accent: #e07850;
+    color-scheme: light dark;
+    --bg: light-dark(#fbfaf9, #0d0d0f);
+    --text: light-dark(#1c1b19, #e8e6e3);
+    --muted: light-dark(#6f6c67, #8a8783);
+    --accent: light-dark(#c2410c, #e07850);
     --accent-fill: #c2410c;
-    --border: #26262b;
+    --border: light-dark(#e2ded8, #26262b);
+    --end: light-dark(#85827c, #8a8783);
+    --icon: light-dark(#1c1b19, #8a8783);
+    --icon-hover: light-dark(#c2410c, #e8e6e3);
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
         Arial, sans-serif;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+:root {
+    --sun: none;
+    --moon: block;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --sun: block;
+        --moon: none;
+    }
+}
+
+:root[data-theme="dark"] {
+    --sun: block;
+    --moon: none;
 }
 
 *,
@@ -43,6 +72,76 @@ a:focus-visible {
 img {
     display: block;
     max-width: 100%;
+}
+
+/* ---------- theme toggle ---------- */
+
+.masthead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.theme-toggle {
+    flex: none;
+    margin-top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.theme-toggle svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.theme-toggle:hover .sun,
+.theme-toggle:focus-visible .sun {
+    transform: rotate(45deg);
+}
+
+.theme-toggle:hover .moon,
+.theme-toggle:focus-visible .moon {
+    transform: rotate(-20deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle svg {
+        transition: none;
+    }
+
+    .theme-toggle:hover .sun,
+    .theme-toggle:focus-visible .sun,
+    .theme-toggle:hover .moon,
+    .theme-toggle:focus-visible .moon {
+        transform: none;
+    }
+
+    .theme-toggle:hover {
+        color: var(--accent);
+    }
+}
+
+.theme-toggle .sun {
+    display: var(--sun);
+}
+
+.theme-toggle .moon {
+    display: var(--moon);
 }
 
 /* ---------- intro ---------- */
@@ -83,11 +182,11 @@ h1 {
 .icons a {
     display: block;
     padding: 10px;
-    color: var(--muted);
+    color: var(--icon);
 }
 
 .icons a:hover {
-    color: var(--text);
+    color: var(--icon-hover);
 }
 
 .icons svg {
@@ -250,6 +349,7 @@ footer .end {
     display: block;
     font-size: 30px;
     font-weight: 800;
+    color: var(--end);
     text-transform: uppercase;
     letter-spacing: 0.28em;
     /* letter-spacing pads the right edge; pull it back to centre */
