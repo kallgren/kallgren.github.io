@@ -1,5 +1,5 @@
 :root {
-    color-scheme: light dark;
+    color-scheme: dark;
     --bg: light-dark(#fbfaf9, #0d0d0f);
     --text: light-dark(#1c1b19, #e8e6e3);
     --muted: light-dark(#6f6c67, #8a8783);
@@ -13,29 +13,15 @@
         Arial, sans-serif;
 }
 
-:root[data-theme="light"] {
-    color-scheme: light;
-}
-
-:root[data-theme="dark"] {
-    color-scheme: dark;
-}
-
 :root {
-    --sun: none;
-    --moon: block;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-        --sun: block;
-        --moon: none;
-    }
-}
-
-:root[data-theme="dark"] {
     --sun: block;
     --moon: none;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --sun: none;
+    --moon: block;
 }
 
 *,
