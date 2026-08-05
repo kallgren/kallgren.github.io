@@ -403,7 +403,11 @@ h4 {
 
 @media (max-width: 720px) {
     main {
-        padding-top: 64px;
+        padding: 64px 24px 20px;
+    }
+
+    h2 {
+        margin-top: 64px;
     }
 
     .range.wide {
