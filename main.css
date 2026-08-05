@@ -5,8 +5,10 @@
     --muted: light-dark(#6f6c67, #8a8783);
     --accent: light-dark(#c2410c, #e07850);
     --accent-fill: #c2410c;
-    --border: light-dark(#e2ded8, #26262b);
-    --end: light-dark(#85827c, #8a8783);
+    --border: light-dark(#e3e2e1, #26262b);
+    --ridge: light-dark(#efeeed, #17171c);
+    --backridge: light-dark(#f5f4f3, #121217);
+    --snow: light-dark(#ffffff, #272a31);
     --icon: light-dark(#1c1b19, #8a8783);
     --icon-hover: light-dark(#c2410c, #e8e6e3);
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
@@ -43,7 +45,7 @@ body {
 main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 120px 32px 80px;
+    padding: 120px 32px 20px;
 }
 
 a {
@@ -364,31 +366,35 @@ h4 {
     cursor: zoom-out;
 }
 
-/* ---------- footer ---------- */
+/* ---------- horizon ---------- */
 
-footer {
-    margin-top: 72px;
+.range {
+    display: block;
+    width: 100%;
+    height: clamp(124px, 16.8vw, 264px);
+    color: var(--ridge);
+}
+
+.backridge {
+    fill: var(--backridge);
+    display: none;
+}
+
+.snow {
+    fill: var(--snow);
+}
+
+.ground {
+    margin-top: -1px;
+    padding: 26px 32px 50px;
+    background: var(--ridge);
     text-align: center;
     color: var(--muted);
 }
 
-footer .end {
-    display: block;
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--end);
-    text-transform: uppercase;
-    letter-spacing: 0.28em;
-    /* letter-spacing pads the right edge; pull it back to centre */
-    text-indent: 0.28em;
-}
-
-footer .break {
-    display: block;
-    margin-top: 10px;
+.ground p {
+    margin: 0;
     font-size: 15px;
-    font-weight: 400;
-    letter-spacing: 0.01em;
 }
 
 @media (max-width: 720px) {
@@ -412,9 +418,5 @@ footer .break {
 
     .project:nth-of-type(even) .shot-btn {
         grid-column: 1;
-    }
-
-    footer .end {
-        font-size: 22px;
     }
 }

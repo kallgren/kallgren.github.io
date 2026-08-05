@@ -257,11 +257,46 @@
                 </div>
             </article>
 
-            <footer>
-                <span class="end">The end</span>
-                <span class="break">Time for a little break?</span>
-            </footer>
         </main>
+
+        <footer class="horizon">
+            <svg
+                class="range"
+                viewBox="0 0 1200 160"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+            >
+                <defs>
+                    <clipPath id="terrain">
+                        <path
+                            d="M0 92C18 89 32 82 48 78C76 66 108 36 128 34C148 36 176 84 196 88C214 90 242 22 262 20C282 18 390 116 430 120C450 122 496 68 516 66C536 64 570 102 588 106C606 110 626 90 642 88C658 86 712 130 742 134C772 138 824 110 846 108C868 106 926 144 952 146C978 148 1012 140 1032 140C1052 140 1098 155 1122 156C1146 157 1176 152 1200 152V160H0Z"
+                        />
+                    </clipPath>
+                </defs>
+
+                <path
+                    class="backridge"
+                    d="M0 78C30 74 70 62 110 60C150 58 200 66 250 58C300 50 340 30 380 32C420 34 452 76 486 86C520 96 562 62 600 60C638 58 682 86 720 96C758 106 802 88 840 84C878 80 922 100 960 112C998 124 1042 118 1080 122C1118 126 1162 132 1200 130V160H0Z"
+                />
+
+                <path
+                    fill="currentColor"
+                    d="M0 92C18 89 32 82 48 78C76 66 108 36 128 34C148 36 176 84 196 88C214 90 242 22 262 20C282 18 390 116 430 120C450 122 496 68 516 66C536 64 570 102 588 106C606 110 626 90 642 88C658 86 712 130 742 134C772 138 824 110 846 108C868 106 926 144 952 146C978 148 1012 140 1032 140C1052 140 1098 155 1122 156C1146 157 1176 152 1200 152V160H0Z"
+                />
+
+                <g class="snow" clip-path="url(#terrain)">
+                    <path
+                        d="M90 -20H180V52C170 58 158 42 146 46C134 50 120 60 106 50C100 46 96 46 90 50Z"
+                    />
+                    <path
+                        d="M225 -20H335V58C322 66 308 48 294 54C280 60 266 68 252 56C244 49 236 52 225 56Z"
+                    />
+                </g>
+            </svg>
+
+            <div class="ground">
+            </div>
+        </footer>
 
         <dialog id="lightbox" aria-label="Enlarged screenshot">
             <img id="lightbox-img" src="" alt="" />
