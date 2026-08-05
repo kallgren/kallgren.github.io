@@ -253,12 +253,11 @@ h3 {
 
 h3 a {
     text-decoration: none;
+    border-bottom: 1px solid transparent;
 }
 
 h3 a:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
+    border-bottom-color: currentColor;
 }
 
 .ext {
@@ -270,8 +269,12 @@ h3 a:hover {
     color: var(--muted);
 }
 
-h3 a:hover .ext {
-    color: var(--text);
+.ext-box {
+    display: inline-block;
+    width: 0.72em;
+    height: 0.72em;
+    margin-left: 0.3em;
+    vertical-align: -0.02em;
 }
 
 .project p {
@@ -300,19 +303,6 @@ h3 a:hover .ext {
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-thickness: 1px;
-}
-
-/* ---------- hover reveal ---------- */
-
-@media (hover: hover) {
-    .project h3 .ext {
-        opacity: 0;
-    }
-
-    .project:hover h3 .ext,
-    .project:focus-within h3 .ext {
-        opacity: 1;
-    }
 }
 
 h4 {
