@@ -261,7 +261,7 @@
 
         <footer class="horizon">
             <svg
-                class="range"
+                class="range wide"
                 viewBox="0 0 1200 160"
                 preserveAspectRatio="none"
                 aria-hidden="true"
@@ -290,6 +290,35 @@
                     />
                     <path
                         d="M225 -20H335V58C322 66 308 48 294 54C280 60 266 68 252 56C244 49 236 52 225 56Z"
+                    />
+                </g>
+            </svg>
+
+            <svg
+                class="range narrow"
+                viewBox="0 0 480 160"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+            >
+                <defs>
+                    <clipPath id="terrain-narrow">
+                        <path
+                            d="M0 116C26 112 62 100 92 66C108 46 116 34 128 34C142 34 158 62 176 86C190 104 202 114 216 112C234 110 256 68 282 36C296 20 304 16 314 18C328 20 342 54 360 82C376 106 396 124 420 128C444 132 462 128 480 124V160H0Z"
+                        />
+                    </clipPath>
+                </defs>
+
+                <path
+                    fill="currentColor"
+                    d="M0 116C26 112 62 100 92 66C108 46 116 34 128 34C142 34 158 62 176 86C190 104 202 114 216 112C234 110 256 68 282 36C296 20 304 16 314 18C328 20 342 54 360 82C376 106 396 124 420 128C444 132 462 128 480 124V160H0Z"
+                />
+
+                <g class="snow" clip-path="url(#terrain-narrow)">
+                    <path
+                        d="M92 -20H168V64C156 72 144 56 132 60C120 64 106 72 92 62Z"
+                    />
+                    <path
+                        d="M278 -20H356V52C344 62 332 44 318 50C304 56 290 62 278 50Z"
                     />
                 </g>
             </svg>

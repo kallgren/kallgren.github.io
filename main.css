@@ -375,6 +375,10 @@ h4 {
     color: var(--ridge);
 }
 
+.range.narrow {
+    display: none;
+}
+
 .backridge {
     fill: var(--backridge);
     display: none;
@@ -400,6 +404,15 @@ h4 {
 @media (max-width: 720px) {
     main {
         padding-top: 64px;
+    }
+
+    .range.wide {
+        display: none;
+    }
+
+    .range.narrow {
+        display: block;
+        height: clamp(104px, 28vw, 160px);
     }
 
     h1 {
