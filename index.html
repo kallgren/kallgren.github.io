@@ -102,6 +102,124 @@
                 </a>
             </nav>
 
+            <h2>History</h2>
+
+            <ol class="timeline">
+                <li class="entry">
+                    <div class="what">
+                        <p class="when">2023 &ndash; 2026</p>
+                        <h3 class="org">Career Break</h3>
+                        <p class="role">Fullstack Developer</p>
+                        <p>
+                            I shifted my focus towards personal development
+                            while building side projects and exploring
+                            AI-assisted development.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="entry">
+                    <div class="what">
+                        <p class="when">2017 &ndash; 2023</p>
+                        <h3 class="org">Valtech AB</h3>
+                        <p class="role">Frontend &amp; Fullstack Developer</p>
+                        <p>
+                            Employed as a consultant working for a wide range of
+                            clients, mostly in the frontend space.
+                        </p>
+                        <ul class="clients">
+                            <li>
+                                <p class="client">SJ</p>
+                                <p class="stint">2021 &ndash; 2023</p>
+                                <!-- Per-client descriptions, kept for
+                                reference:
+                                <p>
+                                    Rebuilt sj.se, 3M+ monthly visitors, as
+                                    React micro-frontends
+                                </p>
+                                -->
+                            </li>
+                            <li>
+                                <p class="client">
+                                    Mycronic, T&auml;by kommun, Skistar and others
+                                </p>
+                                <p class="stint">2020 &ndash; 2021</p>
+                                <!--
+                                <p>
+                                    Features and campaign sites on tight
+                                    deadlines
+                                </p>
+                                -->
+                            </li>
+                            <li>
+                                <p class="client">Axfood</p>
+                                <p class="stint">2018 &ndash; 2020</p>
+                                <!--
+                                <p>
+                                    Around ten grocery sites; built tempo.se,
+                                    led the axfood.se rebuild
+                                </p>
+                                -->
+                            </li>
+                            <li>
+                                <p class="client">Trainee programme</p>
+                                <p class="stint">2017</p>
+                                <!--
+                                <p>
+                                    Consultant trainee programme &mdash; how I
+                                    joined
+                                </p>
+                                -->
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="entry">
+                    <div class="what">
+                        <p class="when">2015 &ndash; 2017</p>
+                        <h3 class="org">Kodfabriken Uppsala AB</h3>
+                        <p class="role">Software Developer</p>
+                        <p>
+                            Built hybrid mobile apps using ionic/AngularJS, and
+                            backend APIs in Laravel, as well as some Android and
+                            ASP.NET work. Part-time work alongside studies.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="entry">
+                    <div class="what">
+                        <p class="when">2015</p>
+                        <h3 class="org">Uppsala University</h3>
+                        <p class="role">Software Developer</p>
+                        <p>
+                            Built a hybrid mobile conference app used for two
+                            conferences at Uppsala University (womENcourage 2015
+                            and the 5th Development Conference for
+                            Sweden&rsquo;s Engineering Education). Part-time
+                            work alongside studies.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="entry edu">
+                    <div class="what">
+                        <p class="when">
+                            2012 &ndash; 2020<span class="kind">Education</span>
+                        </p>
+                        <h3 class="org">Uppsala University</h3>
+                        <p class="role">Master of Science in Engineering</p>
+                        <p>
+                            Studied the IT Programme and did my Master&rsquo;s
+                            thesis alongside working at Valtech. The thesis
+                            consisted of building and evaluating a prototype
+                            interface for a medical journal system.
+                        </p>
+                    </div>
+                </li>
+            </ol>
+
             <h2>Side Projects</h2>
 
             <article class="project">
@@ -224,6 +342,10 @@
                     <p>
                         My personal kanban board for tracking job applications.
                     </p>
+                    <p>
+                        I wanted it to feel like a joyous companion in an
+                        at times grueling job hunt.
+                    </p>
                     <p>Next.js stack, Clerk auth, Neon database.</p>
                     <h4>Features</h4>
                     <ul>
@@ -343,6 +465,42 @@
                     try {
                         localStorage.setItem("theme", next);
                     } catch (e) {}
+                });
+            })();
+        </script>
+
+        <script>
+            (function () {
+                const entries = document.querySelectorAll(".entry");
+                if (!entries.length || !("IntersectionObserver" in window)) {
+                    return;
+                }
+
+                // Only hide the entries once we know we can reveal them again.
+                document.documentElement.classList.add("js-reveal");
+
+                function reveal(targets, options) {
+                    const observer = new IntersectionObserver((records) => {
+                        records.forEach((record) => {
+                            if (!record.isIntersecting) return;
+                            record.target.classList.add("in-view");
+                            observer.unobserve(record.target);
+                        });
+                    }, options);
+
+                    targets.forEach((target) => observer.observe(target));
+                }
+
+                reveal(entries, {
+                    rootMargin: "0px 0px -12% 0px",
+                    threshold: 0.15,
+                });
+
+                // Sub-entries are observed on their own so they arrive as you
+                // reach them rather than all at once with the entry.
+                reveal(document.querySelectorAll(".clients li"), {
+                    rootMargin: "0px 0px -30px 0px",
+                    threshold: 0,
                 });
             })();
         </script>

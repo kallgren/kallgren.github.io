@@ -6,6 +6,7 @@
     --accent: light-dark(#3f6d8c, #8fbcd9);
     --tag: #c2410c;
     --border: light-dark(#e3e2e1, #26262b);
+    --hilite: light-dark(#00000008, #ffffff0f);
     --ridge: light-dark(#efeeed, #17171c);
     --backridge: light-dark(#f5f4f3, #121217);
     --snow: light-dark(#ffffff, #272a31);
@@ -176,6 +177,268 @@ h1 {
 .icons svg {
     width: 26px;
     height: 26px;
+}
+
+/* ---------- timeline ---------- */
+
+.timeline {
+    list-style: none;
+    margin: 40px auto 0;
+    padding: 0;
+    max-width: 1000px;
+}
+
+/* Entries alternate sides; each one draws its own segment of the centre
+   spine on the edge that faces it, so the segments stack into one line. */
+.entry {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.what {
+    position: relative;
+    grid-column: 1;
+    padding: 0 40px 44px 0;
+    text-align: right;
+    border-right: 1px solid var(--border);
+}
+
+.entry:nth-child(even) .what {
+    grid-column: 2;
+    padding: 0 0 44px 40px;
+    text-align: left;
+    border-right: none;
+    border-left: 1px solid var(--border);
+}
+
+.entry:last-child .what {
+    padding-bottom: 0;
+}
+
+.when {
+    margin: 0 0 2px;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+}
+
+.kind {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 0 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+}
+
+.what::before {
+    content: "";
+    position: absolute;
+    right: -5px;
+    top: 7px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--text);
+}
+
+.entry:nth-child(even) .what::before {
+    right: auto;
+    left: -5px;
+}
+
+.edu .what::before {
+    background: var(--bg);
+    box-shadow: inset 0 0 0 2px var(--muted);
+}
+
+/* Painted by a pseudo-element rather than a background on .what, so it can
+   trim the bottom padding that spaces the entries apart. */
+.what::after,
+.clients li::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    background: transparent;
+    transition: background 0.3s ease;
+}
+
+.what::after {
+    inset: -10px 20px 34px -14px;
+    border-radius: 8px;
+}
+
+.entry:nth-child(even) .what::after {
+    inset: -10px -14px 34px 20px;
+}
+
+.entry:last-child .what::after {
+    bottom: -10px;
+}
+
+.what:hover:not(:has(.clients li:hover))::after,
+.clients li:hover::after {
+    background: var(--hilite);
+}
+
+.clients li::after {
+    inset: -6px -19px -6px -10px;
+    border-radius: 6px;
+}
+
+.entry:nth-child(even) .clients li::after {
+    inset: -6px -10px -6px -19px;
+}
+
+.clients {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    margin: 14px 0 0;
+    padding: 0 20px 0 0;
+}
+
+.entry:nth-child(even) .clients {
+    padding: 0 0 0 20px;
+}
+
+.clients li {
+    position: relative;
+}
+
+.clients li::before {
+    content: "";
+    position: absolute;
+    right: -13px;
+    top: 9px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--muted);
+}
+
+.entry:nth-child(even) .clients li::before {
+    right: auto;
+    left: -13px;
+}
+
+.clients li p {
+    margin: 0;
+}
+
+.clients li .client {
+    font-weight: 600;
+}
+
+.clients li p + p {
+    color: var(--muted);
+}
+
+/* Scroll reveal. Only the content slides, so the spine never bends
+   mid-animation. Gated on .js-reveal, which the script adds, so the section
+   still reads without JavaScript. */
+.entry {
+    --slide: -32px;
+}
+
+.entry:nth-child(even) {
+    --slide: 32px;
+}
+
+.js-reveal .what > :not(.clients),
+.js-reveal .clients li {
+    opacity: 0;
+    transform: translateX(var(--slide));
+    transition:
+        opacity 0.5s ease,
+        transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.js-reveal .in-view .what > :not(.clients),
+.js-reveal .clients li.in-view {
+    opacity: 1;
+    transform: none;
+}
+
+.js-reveal .what::before,
+.js-reveal .clients li::before {
+    opacity: 0;
+    transform: scale(0.2);
+    transition:
+        opacity 0.3s ease,
+        transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.js-reveal .in-view .what::before,
+.js-reveal .clients li.in-view::before {
+    opacity: 1;
+    transform: none;
+}
+
+.js-reveal .in-view .what::before {
+    transition-delay: 0.12s;
+}
+
+.clients li:nth-child(2) {
+    --delay: 0.05s;
+}
+
+.clients li:nth-child(3) {
+    --delay: 0.1s;
+}
+
+.clients li:nth-child(4) {
+    --delay: 0.15s;
+}
+
+.js-reveal .clients li.in-view,
+.js-reveal .clients li.in-view::before {
+    transition-delay: var(--delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js-reveal .what > :not(.clients),
+    .js-reveal .clients li,
+    .js-reveal .what::before,
+    .js-reveal .clients li::before,
+    .js-reveal .clients li.in-view,
+    .js-reveal .clients li.in-view::before {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+.stint {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+}
+
+.org {
+    margin: 0 0 2px;
+    font-size: 19px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+.what .role {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.what p {
+    margin: 0 0 12px;
+    font-size: 15px;
+}
+
+.what p:last-child {
+    margin-bottom: 0;
 }
 
 /* ---------- projects ---------- */
@@ -421,6 +684,56 @@ h4 {
 
     h3 {
         font-size: 24px;
+    }
+
+    /* Too narrow to alternate: every entry hangs off one spine on the left. */
+    .entry {
+        grid-template-columns: 1fr;
+    }
+
+    .entry .what,
+    .entry:nth-child(even) .what {
+        grid-column: 1;
+        padding: 0 0 32px 24px;
+        text-align: left;
+        border-right: none;
+        border-left: 1px solid var(--border);
+    }
+
+    .entry .what::before,
+    .entry:nth-child(even) .what::before {
+        right: auto;
+        left: -5px;
+    }
+
+    .entry,
+    .entry:nth-child(even) {
+        --slide: -20px;
+    }
+
+    .entry .what::after,
+    .entry:nth-child(even) .what::after {
+        inset: -10px -14px 22px 12px;
+    }
+
+    .entry .clients li::after,
+    .entry:nth-child(even) .clients li::after {
+        inset: -6px -10px -6px -17px;
+    }
+
+    .entry .clients,
+    .entry:nth-child(even) .clients {
+        padding: 0 0 0 16px;
+    }
+
+    .entry .clients li::before,
+    .entry:nth-child(even) .clients li::before {
+        right: auto;
+        left: -11px;
+    }
+
+    .org {
+        font-size: 18px;
     }
 
     .project,
