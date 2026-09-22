@@ -10,6 +10,14 @@
     --backridge: light-dark(#f5f4f3, #121217);
     --snow: light-dark(#ffffff, #272a31);
     --icon: light-dark(#1c1b19, #8a8783);
+    /* A block of colour rather than a surface, so it stays saturated in both
+       themes — but the red goes muddy against the near-white page, where a
+       raspberry sits better. Both carry white text at 5:1 or above. */
+    --banner: light-dark(#c2255c, #c8372d);
+    --on-banner: #fff;
+    /* How far the colour block's bottom edge rides up past the intro text.
+       Added back onto main's top padding so nothing below actually moves. */
+    --wave-lift: 50px;
     --hover: light-dark(#3f6d8c, #e8e6e3);
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
         Arial, sans-serif;
@@ -45,7 +53,12 @@ body {
 main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 120px 32px 20px;
+    /* Top padding clears the wave, which hangs outside the banner's box. */
+    padding: calc(clamp(84px, 9vw, 132px) + var(--wave-lift)) 32px 20px;
+}
+
+main > h2:first-child {
+    margin-top: 0;
 }
 
 a {
@@ -60,6 +73,60 @@ a:focus-visible {
 img {
     display: block;
     max-width: 100%;
+}
+
+/* ---------- banner ---------- */
+
+.banner {
+    position: relative;
+    /* Contains the inner div's negative bottom margin: without a formatting
+       context it collapses through and moves the banner instead of shrinking it. */
+    display: flow-root;
+    background: var(--banner);
+    color: var(--on-banner);
+}
+
+/* The negative bottom margin lifts the block's edge without touching the
+   padding, so the intro text keeps its position and only the colour moves. */
+.banner-inner {
+    max-width: 1200px;
+    margin: 0 auto calc(-1 * var(--wave-lift));
+    padding: 96px 32px 40px;
+}
+
+/* Sits below the banner rather than inside it, so the page background shows
+   through above the curve without the wave having to repeat that colour. */
+.wave {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: clamp(52px, 6.5vw, 96px);
+    fill: var(--banner);
+}
+
+/* Against the banner the muted greys and the steel accent both fall apart,
+   so the intro runs on white: solid for anything interactive, softened only
+   for the body copy. */
+.banner .blurb {
+    color: rgb(255 255 255 / 0.92);
+}
+
+.banner .blurb a,
+.banner .icons a,
+.banner .theme-toggle {
+    color: var(--on-banner);
+}
+
+.banner .icons a:hover,
+.banner .theme-toggle:hover {
+    color: rgb(255 255 255 / 0.7);
+}
+
+.banner a:focus-visible,
+.banner .theme-toggle:focus-visible {
+    outline-color: var(--on-banner);
 }
 
 /* ---------- theme toggle ---------- */
@@ -410,6 +477,31 @@ h2::after {
     background: var(--border);
 }
 
+/* The History heading caps the timeline instead of sitting beside a rule:
+   it is centred on the spine, and a hairline drops from it into the first
+   entry so the line visibly starts at the word. */
+h2.spine {
+    display: block;
+    position: relative;
+    max-width: 1000px;
+    margin: 96px auto 0;
+    padding-bottom: 40px;
+    text-align: center;
+}
+
+/* Reuses the base rule's pseudo-element, turned on its side. */
+h2.spine::after {
+    position: absolute;
+    left: calc(50% - 1px);
+    bottom: 0;
+    width: 1px;
+    height: 28px;
+}
+
+h2.spine + .timeline {
+    margin-top: 0;
+}
+
 .project {
     display: grid;
     grid-template-columns: 45% 1fr;
@@ -609,12 +701,33 @@ h4 {
 }
 
 @media (max-width: 720px) {
+    /* Less room under the icons here, so the edge rides up less far. */
+    :root {
+        --wave-lift: 20px;
+    }
+
     main {
-        padding: 64px 24px 20px;
+        padding: calc(clamp(56px, 14vw, 84px) + var(--wave-lift)) 24px 20px;
+    }
+
+    .banner-inner {
+        padding: 56px 24px 32px;
     }
 
     h2 {
         margin-top: 64px;
+    }
+
+    /* The spine runs down the left edge on narrow screens, so the heading
+       and its drop line follow it over. */
+    h2.spine {
+        padding-bottom: 32px;
+        text-align: left;
+    }
+
+    h2.spine::after {
+        left: 0;
+        height: 24px;
     }
 
     .range.wide {
