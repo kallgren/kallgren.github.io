@@ -6,7 +6,6 @@
     --accent: light-dark(#3f6d8c, #8fbcd9);
     --tag: #c2410c;
     --border: light-dark(#e3e2e1, #26262b);
-    --hilite: light-dark(#00000008, #ffffff0f);
     --ridge: light-dark(#efeeed, #17171c);
     --backridge: light-dark(#f5f4f3, #121217);
     --snow: light-dark(#ffffff, #272a31);
@@ -253,45 +252,6 @@ h1 {
 .edu .what::before {
     background: var(--bg);
     box-shadow: inset 0 0 0 2px var(--muted);
-}
-
-/* Painted by a pseudo-element rather than a background on .what, so it can
-   trim the bottom padding that spaces the entries apart. */
-.what::after,
-.clients li::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    pointer-events: none;
-    background: transparent;
-    transition: background 0.3s ease;
-}
-
-.what::after {
-    inset: -10px 20px 34px -14px;
-    border-radius: 8px;
-}
-
-.entry:nth-child(even) .what::after {
-    inset: -10px -14px 34px 20px;
-}
-
-.entry:last-child .what::after {
-    bottom: -10px;
-}
-
-.what:hover:not(:has(.clients li:hover))::after,
-.clients li:hover::after {
-    background: var(--hilite);
-}
-
-.clients li::after {
-    inset: -6px -19px -6px -10px;
-    border-radius: 6px;
-}
-
-.entry:nth-child(even) .clients li::after {
-    inset: -6px -10px -6px -19px;
 }
 
 .clients {
@@ -709,16 +669,6 @@ h4 {
     .entry,
     .entry:nth-child(even) {
         --slide: -20px;
-    }
-
-    .entry .what::after,
-    .entry:nth-child(even) .what::after {
-        inset: -10px -14px 22px 12px;
-    }
-
-    .entry .clients li::after,
-    .entry:nth-child(even) .clients li::after {
-        inset: -6px -10px -6px -17px;
     }
 
     .entry .clients,
