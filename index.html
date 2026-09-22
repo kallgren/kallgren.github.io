@@ -479,29 +479,18 @@
                 // Only hide the entries once we know we can reveal them again.
                 document.documentElement.classList.add("js-reveal");
 
-                function reveal(targets, options) {
-                    const observer = new IntersectionObserver((records) => {
+                const observer = new IntersectionObserver(
+                    (records) => {
                         records.forEach((record) => {
                             if (!record.isIntersecting) return;
                             record.target.classList.add("in-view");
                             observer.unobserve(record.target);
                         });
-                    }, options);
+                    },
+                    { rootMargin: "0px 0px -4% 0px", threshold: 0.03 },
+                );
 
-                    targets.forEach((target) => observer.observe(target));
-                }
-
-                reveal(entries, {
-                    rootMargin: "0px 0px -12% 0px",
-                    threshold: 0.15,
-                });
-
-                // Sub-entries are observed on their own so they arrive as you
-                // reach them rather than all at once with the entry.
-                reveal(document.querySelectorAll(".clients li"), {
-                    rootMargin: "0px 0px -30px 0px",
-                    threshold: 0,
-                });
+                entries.forEach((entry) => observer.observe(entry));
             })();
         </script>
 
