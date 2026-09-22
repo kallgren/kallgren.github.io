@@ -479,18 +479,64 @@
                 // Only hide the entries once we know we can reveal them again.
                 document.documentElement.classList.add("js-reveal");
 
-                const observer = new IntersectionObserver(
-                    (records) => {
+                function reveal(targets, options, onReveal) {
+                    const observer = new IntersectionObserver((records) => {
                         records.forEach((record) => {
                             if (!record.isIntersecting) return;
+                            if (onReveal) onReveal(record.target);
                             record.target.classList.add("in-view");
                             observer.unobserve(record.target);
                         });
-                    },
+                    }, options);
+
+                    targets.forEach((target) => observer.observe(target));
+                }
+
+                reveal(
+                    entries,
                     { rootMargin: "0px 0px -4% 0px", threshold: 0.03 },
+                    (entry) => {
+                        entry.dataset.shownAt = performance.now();
+                    },
                 );
 
-                entries.forEach((entry) => observer.observe(entry));
+                // The clients get their own observer so they slide in as you
+                // reach them rather than all at once with the entry.
+                //
+                // Each one waits for whatever is left of its entry's lead, so
+                // the dot still goes first, and then queues a step behind any
+                // sibling still arriving. Both are measured against the clock
+                // rather than fixed in CSS: scrolled past quickly, a client
+                // would otherwise hang back for a dot that landed long ago, or
+                // for siblings nobody ever saw, and drop in on top of whatever
+                // is sliding in by then.
+                const lead = 260; // Keep in sync with --lead in main.css.
+                const step = 80;
+
+                reveal(
+                    document.querySelectorAll(".clients li"),
+                    { rootMargin: "0px 0px -5px 0px", threshold: 0 },
+                    (client) => {
+                        const now = performance.now();
+                        const shownAt = Number(
+                            client.closest(".entry").dataset.shownAt,
+                        );
+                        const left = shownAt ? lead - (now - shownAt) : lead;
+                        // The first client trails the entry's text by a step
+                        // rather than sliding in alongside it.
+                        const after = left > 0 ? left + step : 0;
+
+                        const list = client.closest(".clients");
+                        const queued = Number(list.dataset.nextAt) || 0;
+                        const at = Math.max(now + after, queued);
+
+                        list.dataset.nextAt = at + step;
+                        client.style.setProperty(
+                            "--reveal-delay",
+                            at - now + "ms",
+                        );
+                    },
+                );
             })();
         </script>
 

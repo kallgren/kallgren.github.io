@@ -300,17 +300,23 @@ h1 {
 
 /* Scroll reveal. Only the content slides, so the spine never bends
    mid-animation. Gated on .js-reveal, which the script adds, so the section
-   still reads without JavaScript. */
+   still reads without JavaScript. --lead is the beat the dot gets to itself
+   before the content follows it in. */
 .entry {
     --slide: -32px;
+    --lead: 0.26s;
 }
 
 .entry:nth-child(even) {
     --slide: 32px;
 }
 
-/* The dot lands on the spine first, then the content slides in after it. */
-.js-reveal .what > * {
+/* The dot lands on the spine first, then the content slides in after it.
+   The clients are observed on their own, so they arrive as you reach them
+   rather than all at once with the entry. Their delay is therefore not fixed
+   here but computed as each one shows up. */
+.js-reveal .what > :not(.clients),
+.js-reveal .clients li {
     opacity: 0;
     transform: translateX(var(--slide));
     transition:
@@ -318,10 +324,17 @@ h1 {
         transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.js-reveal .in-view .what > * {
+.js-reveal .in-view .what > :not(.clients) {
     opacity: 1;
     transform: none;
-    transition-delay: 0.26s;
+    transition-delay: var(--lead);
+}
+
+/* --reveal-delay is worked out per client as it arrives; see index.html. */
+.js-reveal .clients li.in-view {
+    opacity: 1;
+    transform: none;
+    transition-delay: var(--reveal-delay, var(--lead));
 }
 
 .js-reveal .what::before {
@@ -338,7 +351,9 @@ h1 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .js-reveal .what > *,
+    .js-reveal .what > :not(.clients),
+    .js-reveal .clients li,
+    .js-reveal .clients li.in-view,
     .js-reveal .what::before {
         opacity: 1;
         transform: none;
